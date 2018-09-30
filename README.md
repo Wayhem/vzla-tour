@@ -1,4 +1,4 @@
-# Project Title
+# vzla-tour
 
 Small project practicing basics of web developing.
 
