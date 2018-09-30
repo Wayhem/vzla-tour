@@ -1,0 +1,28 @@
+<% include partials/header %>
+<div class="container">
+  <header class="jumbotron">
+    <div class="container">
+      <h1>Venezuela Tours</h1>
+      <p>Explora un mundo lleno de posibilidades</p>
+      <p>
+        <a class="btn btn-primary btn-lg" href="/toursites/new">Agregar nuevo sitio</a>
+      </p>
+    </div>
+  </header>
+  <div class="row text-center" style="display: flex; flex-wrap: wrap;">
+<% sites.forEach(function(site){ %>
+    <div class="col-md-3 col-sm-6">
+      <div class="thumbnail">
+        <img src="<%=site["image"]%>">
+        <div class="caption">
+          <h4><%= site.name %></h4>
+        </div>
+        <p>
+          <a href="/toursites/<%= site._id %>" class="btn btn-primary">Más información</a>
+        </p>
+      </div>
+    </div>
+<% }); %>
+</div>
+</div>
+<% include partials/footer %>
