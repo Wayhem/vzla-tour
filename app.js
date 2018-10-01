@@ -3,17 +3,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('request');
 const mongoose = require('mongoose');
+var Toursite = require('./models/toursite');
+var seedDB = require('./seeddb');
 
 mongoose.connect('mongodb://localhost:27017/venezuela_tours', { useNewUrlParser: true });
 var app = express();
-
-var toursiteSchema = new mongoose.Schema({
-  name: String,
-  image: String,
-  description: String
-});
-
-var Toursite = mongoose.model("Toursite", toursiteSchema);
 
 // Toursite.create({
 //   name:"Roraima",
@@ -31,6 +25,7 @@ var Toursite = mongoose.model("Toursite", toursiteSchema);
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + "/public"));
+seedDB();
 
 app.get("/toursites", function(req, res) {
   Toursite.find({}, function (err, toursites) {
@@ -62,10 +57,11 @@ app.get("/toursites/new", function(req, res) {
 });
 
 app.get("/toursites/:id", function(req, res){
-  Toursite.findById(req.params.id, function (err, foundSite){
+  Toursite.findById(req.params.id).populate("comments").exec(function (err, foundSite){
     if(err){
       console.log(err);
     } else {
+      console.log(foundSite);
       res.render("show", { toursite: foundSite });
     }
   });

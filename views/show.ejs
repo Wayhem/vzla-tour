@@ -2,4 +2,9 @@
 <h1><%= toursite.name %></h1>
 <img src="<%= toursite.image %>">
 <p><%= toursite.description %></p>
+<% toursite.comments.forEach(function(comment) { %>
+<p>
+  <strong><%= comment["author"] %></strong> - <%= comment["text"] %>
+</p>
+<% }) %>
 <% include partials/footer %>

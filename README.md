@@ -1,4 +1,4 @@
-# vzla-tour
+# Vzla-Tour
 
 Small project practicing basics of web developing.
 
