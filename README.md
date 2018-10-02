@@ -32,10 +32,20 @@ Check node version to be sure node is installed with
 node -v
 ```
 
-## Running the tests
+## Routes
 
-In order to add new sites go to /toursites/new
+### Sites
 
+* INDEX     /toursites
+* NEW       /toursites/new
+* CREATE    /toursites
+* SHOW      /toursites/:id
+
+### Comments
+
+* NEW       /toursites/:id/comments/new
+* CREATE    /toursites/:id/comments
+ 
 ## Built With
 
 * [Express](http://expressjs.com/) - The web framework used
