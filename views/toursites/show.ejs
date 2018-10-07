@@ -16,6 +16,9 @@
           <h4 class="pull-right">X,00 BsS/noche</h4>
           <h4><a><%= toursite.name %></a></h4>
           <p><%= toursite.description %></p>
+          <p>
+            <em>Enviado por <strong><%= toursite.author.username %></strong></em>
+          </p>
         </div>
       </div>
       <div class="well">
@@ -26,7 +29,7 @@
         <% toursite.comments.forEach(function(comment) { %>
           <div class="row">
             <div class="col-md-12">
-              <strong><%= comment["author"] %></strong>
+              <strong><%= comment.author.username %></strong>
               <span class="pull-right">Hace 10 días</span>
               <p>
                 <%= comment["text"] %>
