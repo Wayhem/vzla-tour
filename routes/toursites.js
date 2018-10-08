@@ -2,6 +2,7 @@ const express = require('express');
 var router = express.Router();
 var Toursite = require('../models/toursite');
 
+
 router.get("/", function(req, res) {
   Toursite.find({}, function (err, toursites) {
     if(err){
@@ -41,6 +42,40 @@ router.get("/:id", function(req, res){
       console.log(err);
     } else {
       res.render("toursites/show", { toursite: foundSite });
+    }
+  });
+});
+
+router.get("/:id/edit", function (req, res) {
+  Toursite.findById(req.params.id, function (err, foundSite) {
+    if (err) {
+      console.log(err);
+      res.redirect('/toursites');
+    } else {
+      res.render("toursites/edit", {toursite:foundSite});
+    }
+  });
+});
+
+router.put("/:id", function (req, res) {
+  Toursite.findOneAndUpdate({_id: req.params.id}, req.body.toursite, function (err, updatedToursite) {
+    if (err) {
+      console.log(err);
+      res.redirect("/");
+    } else {
+      res.redirect("/toursites/" + req.params.id);
+    }
+  });
+});
+
+router.delete("/:id", function (req, res) {
+  Toursite.findOneAndDelete({_id: req.params.id}, function (err) {
+    if (err){
+      console.log(err);
+      res.redirect("/toursites");
+    } else {
+      console.log("Erased toursite");
+      res.redirect("/toursites");
     }
   });
 });

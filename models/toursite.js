@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+//remove deprecation warning from mongoose with .findOneAndUpdate which ends up using .findAndModify
+mongoose.set('useFindAndModify', false);
 
 var toursiteSchema = new mongoose.Schema({
   name: String,

@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const methodOverride = require('method-override');
 var Toursite = require('./models/toursite');
 var Comment = require("./models/comment");
 var User = require('./models/user');
@@ -18,6 +19,7 @@ var app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + "/public"));
+app.use(methodOverride("_method"));
 // seed db script
 // seedDB();
 
