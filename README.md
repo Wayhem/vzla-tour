@@ -40,12 +40,15 @@ node -v
 * NEW       /toursites/new
 * CREATE    /toursites
 * SHOW      /toursites/:id
+* EDIT      /toursites/:id/edit
+* UPDATE    /toursites/:id
+* DESTROY   /toursites/:id
 
 ### Comments
 
 * NEW       /toursites/:id/comments/new
 * CREATE    /toursites/:id/comments
- 
+
 ## Built With
 
 * [Express](http://expressjs.com/) - The web framework used

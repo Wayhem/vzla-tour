@@ -19,10 +19,12 @@
           <p>
             <em>Enviado por <strong><%= toursite.author.username %></strong></em>
           </p>
-          <a class="btn btn-warning" href="/toursites/<%= toursite._id %>/edit">Editar</a>
-          <form id="deleteToursiteForm" action="/toursites/<%= toursite._id %>?_method=DELETE" method="post">
-            <button class="btn btn-danger">Borrar</button>
-          </form>
+          <% if (currentUser && toursite.author.id.equals(currentUser._id)) { %>
+            <a class="btn btn-warning" href="/toursites/<%= toursite._id %>/edit">Editar</a>
+            <form id="deleteToursiteForm" action="/toursites/<%= toursite._id %>?_method=DELETE" method="post">
+              <button class="btn btn-danger">Borrar</button>
+            </form>
+          <% } %>
         </div>
       </div>
       <div class="well">
