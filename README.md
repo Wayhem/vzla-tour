@@ -48,6 +48,7 @@ node -v
 
 * NEW       /toursites/:id/comments/new
 * CREATE    /toursites/:id/comments
+* EDIT      /toursites/:id/comments/:comment_id/edit
 
 ## Built With
 
