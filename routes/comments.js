@@ -2,8 +2,9 @@ const express = require('express');
 var router = express.Router({mergeParams: true});
 var Comment = require('../models/comment');
 var Toursite = require('../models/toursite');
+var middleware = require('../middlewares');
 
-router.get("/new", LoggedIn, function(req, res){
+router.get("/new", middleware.LoggedIn, function(req, res){
   Toursite.findById(req.params.id, function (err, toursite) {
     if (err){
       console.log(err);
@@ -13,7 +14,7 @@ router.get("/new", LoggedIn, function(req, res){
   });
 });
 
-router.post("/", LoggedIn, function (req, res) {
+router.post("/", middleware.LoggedIn, function (req, res) {
   var comment = req.body.comment;
   Toursite.findById(req.params.id, function (err, toursite) {
     if (err) {
@@ -39,7 +40,7 @@ router.post("/", LoggedIn, function (req, res) {
   });
 });
 
-router.get("/:comment_id/edit", checkearPosterDeComment, function (req, res) {
+router.get("/:comment_id/edit", middleware.checkearPosterDeComment, function (req, res) {
   Comment.findById({_id: req.params.comment_id}, function (err, foundComment) {
     if (err) {
       console.log(err);
@@ -57,7 +58,7 @@ router.get("/:comment_id/edit", checkearPosterDeComment, function (req, res) {
   });
 });
 
-router.put("/:comment_id", checkearPosterDeComment, function (req, res) {
+router.put("/:comment_id", middleware.checkearPosterDeComment, function (req, res) {
     Comment.findOneAndUpdate({_id: req.params.comment_id}, req.body.comment, function (err, updatedComment) {
       if(err){
         res.redirect('back')
@@ -67,7 +68,7 @@ router.put("/:comment_id", checkearPosterDeComment, function (req, res) {
     });
 });
 
-router.delete("/:comment_id", checkearPosterDeComment, function (req, res) {
+router.delete("/:comment_id", middleware.checkearPosterDeComment, function (req, res) {
   Comment.findOneAndDelete({_id: req.params.comment_id}, function (err){
     if (err){
       console.log(err);
@@ -78,31 +79,5 @@ router.delete("/:comment_id", checkearPosterDeComment, function (req, res) {
     }
   });
 });
-
-function LoggedIn(req, res, next) {
-  if(req.isAuthenticated()){
-    return next();
-  }
-  res.redirect("/login");
-}
-
-function checkearPosterDeComment(req, res, next) {
-  if (req.isAuthenticated()){
-    Comment.findById(req.params.comment_id, function (err, foundComment) {
-      if (err) {
-        console.log(err);
-        res.redirect('back');
-      } else {
-        if (foundComment.author.id.equals(req.user._id)){
-          next();
-        } else {
-          res.redirect("back");
-        }
-      }
-    });
-  } else {
-    res.redirect("back");
-  }
-}
 
 module.exports = router;

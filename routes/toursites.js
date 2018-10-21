@@ -1,6 +1,7 @@
 const express = require('express');
 var router = express.Router();
 var Toursite = require('../models/toursite');
+var middleware = require('../middlewares');
 
 
 router.get("/", function(req, res) {
@@ -13,7 +14,7 @@ router.get("/", function(req, res) {
   });
 });
 
-router.post("/", LoggedIn, function(req, res) {
+router.post("/", middleware.LoggedIn, function(req, res) {
   var name = req.body.name;
   var image = req.body.image;
   var desc = req.body.body;
@@ -46,7 +47,7 @@ router.get("/:id", function(req, res){
   });
 });
 
-router.get("/:id/edit", checkearPosterDeSite, function (req, res) {
+router.get("/:id/edit", middleware.checkearPosterDeSite, function (req, res) {
     Toursite.findById(req.params.id, function (err, foundSite) {
       if (err) {
         console.log(err);
@@ -57,7 +58,7 @@ router.get("/:id/edit", checkearPosterDeSite, function (req, res) {
     });
 });
 
-router.put("/:id", checkearPosterDeSite, function (req, res) {
+router.put("/:id", middleware.checkearPosterDeSite, function (req, res) {
   Toursite.findOneAndUpdate({_id: req.params.id}, req.body.toursite, function (err, updatedToursite) {
     if (err) {
       console.log(err);
@@ -68,7 +69,7 @@ router.put("/:id", checkearPosterDeSite, function (req, res) {
   });
 });
 
-router.delete("/:id", checkearPosterDeSite, function (req, res) {
+router.delete("/:id", middleware.checkearPosterDeSite, function (req, res) {
   Toursite.findOneAndDelete({_id: req.params.id}, function (err) {
     if (err){
       console.log(err);
@@ -85,25 +86,6 @@ function LoggedIn(req, res, next) {
     return next();
   }
   res.redirect("/login");
-}
-
-function checkearPosterDeSite(req, res, next) {
-  if (req.isAuthenticated()){
-    Toursite.findById(req.params.id, function (err, foundSite) {
-      if (err) {
-        console.log(err);
-        res.redirect('back');
-      } else {
-        if (foundSite.author.id.equals(req.user._id)){
-          next();
-        } else {
-          res.redirect("back");
-        }
-      }
-    });
-  } else {
-    res.redirect("back");
-  }
 }
 
 module.exports = router;
