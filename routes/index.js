@@ -20,21 +20,17 @@ router.post("/register", function (req, res) {
   let newUser = new User({username:req.body.username});
   User.register(newUser, req.body.password, function (err, user) {
     if (err){
-      console.log(err);
-      res.render("/register");
+      return res.render("register", {"error": err.message});
     }
     passport.authenticate('local')(req, res, function (){
+      req.flash('success', 'Bienvenido a Venezuela Tours ' + user.username);
       res.redirect("/toursites")
     })
   });
 });
 
 router.get("/login", function (req, res) {
-  if(req.isAuthenticated()){
-    res.redirect("/");
-  } else {
   res.render('login');
-  }
 });
 
 router.post('/login', passport.authenticate("local", {
@@ -46,6 +42,7 @@ router.post('/login', passport.authenticate("local", {
 router.get("/logout", function (req, res) {
   if(req.isAuthenticated()){
     req.logout();
+    req.flash('success', 'Sesión ha sido cerrada.')
     res.redirect("/toursites");
   } else {
     res.redirect("/");

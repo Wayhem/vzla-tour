@@ -19,6 +19,7 @@ router.post("/", middleware.LoggedIn, function (req, res) {
   Toursite.findById(req.params.id, function (err, toursite) {
     if (err) {
       console.log(err);
+      req.flash('error', 'Error inesperado');
     } else {
       Comment.create(
           {
@@ -30,9 +31,11 @@ router.post("/", middleware.LoggedIn, function (req, res) {
           }, function(err, comentario) {
             if (err) {
               console.log(err);
+              req.flash('error', 'Error inesperado');
             } else {
               toursite.comments.push(comentario);
               toursite.save();
+              req.flash('success', 'Comentario añadido exitosamente');
               res.redirect("/toursites/"+toursite._id);
             }
           });
@@ -74,7 +77,7 @@ router.delete("/:comment_id", middleware.checkearPosterDeComment, function (req,
       console.log(err);
       res.redirect("back");
     } else {
-      console.log("Erased comment");
+      req.flash('success', 'Comentario eliminado');
       res.redirect("/toursites/" + req.params.id);
     }
   });

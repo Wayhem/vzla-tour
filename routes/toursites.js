@@ -7,6 +7,7 @@ var middleware = require('../middlewares');
 router.get("/", function(req, res) {
   Toursite.find({}, function (err, toursites) {
     if(err){
+      req.flash('error', 'Algo ha pasado');
       console.log(err);
     } else {
       res.render("toursites/index", {sites: toursites});
@@ -26,21 +27,24 @@ router.post("/", middleware.LoggedIn, function(req, res) {
 
   Toursite.create(newToursite, function (err, newCreat){
     if(err){
-      console.log(err);
+      req.flash('error', 'Algo ha pasado');
+      res.redirect('back');
     } else {
+      req.flash('success', 'Sitio turístico exitosamente añadido');
       res.redirect("/toursites");
     }
   });
 });
 
-router.get("/new", LoggedIn, function(req, res) {
+router.get("/new", middleware.LoggedIn, function(req, res) {
   res.render("toursites/new");
 });
 
 router.get("/:id", function(req, res){
   Toursite.findById(req.params.id).populate("comments").exec(function (err, foundSite){
-    if(err){
-      console.log(err);
+    if(err || !foundSite){
+      req.flash('error', 'Sitio turístico no encontrado');
+      res.redirect('back');
     } else {
       res.render("toursites/show", { toursite: foundSite });
     }
@@ -61,9 +65,11 @@ router.get("/:id/edit", middleware.checkearPosterDeSite, function (req, res) {
 router.put("/:id", middleware.checkearPosterDeSite, function (req, res) {
   Toursite.findOneAndUpdate({_id: req.params.id}, req.body.toursite, function (err, updatedToursite) {
     if (err) {
+      req.flash('error', 'Algo ha pasado');
       console.log(err);
       res.redirect("/");
     } else {
+      req.flash('success', 'Sitio turístico exitosamente editado');
       res.redirect("/toursites/" + req.params.id);
     }
   });
@@ -75,17 +81,10 @@ router.delete("/:id", middleware.checkearPosterDeSite, function (req, res) {
       console.log(err);
       res.redirect("/toursites");
     } else {
-      console.log("Erased toursite");
+      req.flash('success', 'Sitio turístico eliminado');
       res.redirect("/toursites");
     }
   });
 });
-
-function LoggedIn(req, res, next) {
-  if(req.isAuthenticated()){
-    return next();
-  }
-  res.redirect("/login");
-}
 
 module.exports = router;
