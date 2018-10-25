@@ -19,11 +19,12 @@ router.post("/", middleware.LoggedIn, function(req, res) {
   var name = req.body.name;
   var image = req.body.image;
   var desc = req.body.body;
+  let price = req.body.price;
   let author = {
     id: req.user._id,
     username: req.user.username
   }
-  var newToursite = {name: name, image: image, description: desc, author: author};
+  var newToursite = {name: name, image: image, description: desc, price: price, author: author};
 
   Toursite.create(newToursite, function (err, newCreat){
     if(err){
