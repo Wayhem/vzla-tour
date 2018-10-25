@@ -10,7 +10,7 @@ router.get("/", function(req, res) {
       req.flash('error', 'Algo ha pasado');
       console.log(err);
     } else {
-      res.render("toursites/index", {sites: toursites});
+      res.render("toursites/index", {sites: toursites, page: 'toursites'});
     }
   });
 });
