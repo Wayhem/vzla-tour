@@ -5,14 +5,31 @@ var middleware = require('../middlewares');
 
 
 router.get("/", function(req, res) {
-  Toursite.find({}, function (err, toursites) {
-    if(err){
-      req.flash('error', 'Algo ha pasado');
-      console.log(err);
-    } else {
-      res.render("toursites/index", {sites: toursites, page: 'toursites'});
-    }
-  });
+  if (req.query.search){
+    const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+    Toursite.find({'name': regex}, function (err, toursites) {
+      if(err){
+        req.flash('error', 'Algo ha pasado');
+        console.log(err);
+      } else {
+        if (toursites.length < 1) {
+          req.flash('error', 'No se ha encontrado ningún sitio');
+          return res.redirect('back');
+        } else {
+          res.render("toursites/index", {sites: toursites, page: 'toursites'});
+        }
+      }
+    });
+  } else {
+    Toursite.find({}, function (err, toursites) {
+      if(err){
+        req.flash('error', 'Algo ha pasado');
+        console.log(err);
+      } else {
+        res.render("toursites/index", {sites: toursites, page: 'toursites'});
+      }
+    });
+  }
 });
 
 router.post("/", middleware.LoggedIn, function(req, res) {
@@ -87,5 +104,9 @@ router.delete("/:id", middleware.checkearPosterDeSite, function (req, res) {
     }
   });
 });
+
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
 
 module.exports = router;
