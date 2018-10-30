@@ -14,7 +14,8 @@ var toursiteRoutes = require('./routes/toursites');
 var commentRoutes = require('./routes/comments');
 var indexRoutes = require('./routes/index');
 
-mongoose.connect('mongodb://localhost:27017/venezuela_tours', { useNewUrlParser: true });
+// mongoose.connect('mongodb://localhost:27017/venezuela_tours', { useNewUrlParser: true });
+mongoose.connect('mongodb://jvillarroel:akira123@ds245523.mlab.com:45523/vzlatours', { useNewUrlParser: true });
 var app = express();
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -48,6 +49,6 @@ app.use("/toursites", toursiteRoutes);
 app.use("/toursites/:id/comments", commentRoutes);
 app.use("/", indexRoutes);
 
-app.listen(3000, function(){
+app.listen(process.env.PORT, process.env.IP, function(){
   console.log("Venezuela Tour has started");
 });
